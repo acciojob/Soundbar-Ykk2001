@@ -1,87 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SoundBar</title>
-    <style>
-      body {
-        margin: 0;
-        height: 100vh;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #a066e8;
-        font-family: Arial, sans-serif;
-      }
-      #buttons {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-        justify-content: center;
-      }
-      .btn {
-        background-color: #5a2ea6;
-        color: white;
-        border: none;
-        padding: 15px 25px;
-        border-radius: 6px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .btn:hover {
-        background-color: #4b238a;
-      }
-      .stop {
-        background-color: #9b2c2c;
-      }
-      .stop:hover {
-        background-color: #7e2121;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="buttons">
-      <button class="btn">applause</button>
-      <button class="btn">boo</button>
-      <button class="btn">gasp</button>
-      <button class="btn">tada</button>
-      <button class="btn">victory</button>
-      <button class="btn">wrong</button>
-      <button class="stop">stop</button>
-    </div>
+<head>
+  <meta charset="UTF-8">
+  <title>Soundbar Assignment</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #a066e8; /* purple bg like screenshot */
+      font-family: Arial, sans-serif;
+    }
 
-    <script>
-      // Keep track of currently playing audio
-      let currentAudio = null;
+    #buttons {
+      display: flex;
+      gap: 20px;
+    }
 
-      // Add click listeners to sound buttons
-      document.querySelectorAll(".btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const soundName = btn.textContent.trim();
+    .btn {
+      background-color: #5a2ea6;
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn:hover {
+      background-color: #4b238a;
+    }
+
+    .stop {
+      background-color: #9b2c2c;
+    }
+
+    .stop:hover {
+      background-color: #7e2121;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="buttons">
+    <button class="btn">applause</button>
+    <button class="btn">boo</button>
+    <button class="btn">gasp</button>
+    <button class="btn">tada</button>
+    <button class="btn">victory</button>
+    <button class="btn">wrong</button>
+    <button class="btn stop">stop</button>
+  </div>
+
+  <script>
+    // Using free hosted sound URLs instead of local folder
+    const sounds = {
+      applause: 'https://actions.google.com/sounds/v1/crowds/applause.ogg',
+      boo: 'https://actions.google.com/sounds/v1/human_voices/boo.ogg',
+      gasp: 'https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg',
+      tada: 'https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg',
+      victory: 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg',
+      wrong: 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'
+    };
+
+    let currentAudio = null;
+
+    document.querySelectorAll('.btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const soundName = btn.textContent.trim();
+
+        if (soundName === 'stop') {
+          stopSound();
+        } else {
           playSound(soundName);
-        });
-      });
-
-      // Stop button
-      document.querySelector(".stop").addEventListener("click", stopSound);
-
-      function playSound(name) {
-        stopSound(); // stop any currently playing audio
-        const audio = new Audio(`./sounds/${name}.mp3`);
-        audio.currentTime = 0;
-        audio.play().catch(() => {}); // prevents Cypress rejection errors
-        currentAudio = audio;
-      }
-
-      function stopSound() {
-        if (currentAudio) {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-          currentAudio = null;
         }
+      });
+    });
+
+    function playSound(name) {
+      stopSound(); // stop any current audio before playing new one
+      currentAudio = new Audio(sounds[name]);
+      currentAudio.play();
+    }
+
+    function stopSound() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
       }
-    </script>
-  </body>
+    }
+  </script>
+
+</body>
 </html>
+
+
