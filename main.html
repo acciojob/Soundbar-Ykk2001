@@ -41,55 +41,53 @@
     </style>
   </head>
   <body>
-    <div id="buttons">
-      <button class="btn">applause</button>
-      <button class="btn">boo</button>
-      <button class="btn">gasp</button>
-      <button class="btn">tada</button>
-      <button class="btn">victory</button>
-      <button class="btn">wrong</button>
-      <button class="stop">stop</button>
-    </div>
+  <div id="buttons">
+    <button class="btn">applause</button>
+    <button class="btn">boo</button>
+    <button class="btn">gasp</button>
+    <button class="btn">tada</button>
+    <button class="btn">victory</button>
+    <button class="btn">wrong</button>
+    <button class="stop">stop</button>
+  </div>
 
-    <script>
-      // Using free hosted sound URLs instead of local folder
-      const sounds = {
-        applause: "https://actions.google.com/sounds/v1/crowds/applause.ogg",
-        boo: "https://actions.google.com/sounds/v1/human_voices/boo.ogg",
-        gasp: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg",
-        tada: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg",
-        victory: "https://actions.google.com/sounds/v1/alarms/beep_short.ogg",
-        wrong: "https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg",
-      };
+  <!-- Hidden audio elements -->
+  <audio id="applause" src="https://actions.google.com/sounds/v1/crowds/applause.ogg"></audio>
+  <audio id="boo" src="https://actions.google.com/sounds/v1/human_voices/boo.ogg"></audio>
+  <audio id="gasp" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
+  <audio id="tada" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
+  <audio id="victory" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
+  <audio id="wrong" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
 
-      let currentAudio = null;
+  <script>
+    let currentAudio = null;
 
-      let Btns = document.querySelectorAll(".btn");
-      Btns.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const soundName = btn.textContent.trim();
+    document.querySelectorAll(".btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const soundName = btn.textContent.trim();
+        playSound(soundName);
+      });
+    });
 
-          if (soundName == "stop") {
-            stopSound();
-          } else {
-            playSound(soundName);
-          }
-        });
-      }); //Btns
+    document.querySelector(".stop").addEventListener("click", stopSound);
 
-      function playSound(name) {
-        stopSound();
-        currentAudio = new Audio(sounds[name]);
+    function playSound(name) {
+      stopSound();
+      currentAudio = document.getElementById(name);
+      if (currentAudio) {
+        currentAudio.currentTime = 0;
         currentAudio.play();
       }
+    }
 
-      function stopSound() {
-        if (currentAudio) {
-          currentAudio.pause();
-          currentAudio.currentTime = 0;
-          currentAudio = null;
-        }
+    function stopSound() {
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
+        currentAudio = null;
       }
-    </script>
-  </body>
+    }
+  </script>
+</body>
+
 </html>
