@@ -52,17 +52,11 @@
       <button class="stop">stop</button>
     </div>
 
-    <!-- Hidden audio elements (using MP3 for broad support) -->
-    <audio id="applause" src="https://www.soundjay.com/human/applause-01.mp3"></audio>
-    <audio id="boo" src="https://www.soundjay.com/human/boo-01.mp3"></audio>
-    <audio id="gasp" src="https://www.soundjay.com/button/beep-07.mp3"></audio>
-    <audio id="tada" src="https://www.soundjay.com/misc/small-bell-ring-01.mp3"></audio>
-    <audio id="victory" src="https://www.soundjay.com/button/beep-01a.mp3"></audio>
-    <audio id="wrong" src="https://www.soundjay.com/button/beep-10.mp3"></audio>
-
     <script>
-      window.currentAudio = null;
+      // Keep track of currently playing audio
+      let currentAudio = null;
 
+      // Add click listeners to sound buttons
       document.querySelectorAll(".btn").forEach((btn) => {
         btn.addEventListener("click", () => {
           const soundName = btn.textContent.trim();
@@ -70,19 +64,15 @@
         });
       });
 
+      // Stop button
       document.querySelector(".stop").addEventListener("click", stopSound);
 
       function playSound(name) {
-        stopSound();
-        const audio = document.getElementById(name);
-        if (audio) {
-          audio.currentTime = 0;
-          // Catch rejected play() promises so Cypress won't fail
-          audio.play().catch((err) => {
-            console.warn("Audio play failed:", err.message);
-          });
-          currentAudio = audio;
-        }
+        stopSound(); // stop any currently playing audio
+        const audio = new Audio(`./sounds/${name}.mp3`);
+        audio.currentTime = 0;
+        audio.play().catch(() => {}); // prevents Cypress rejection errors
+        currentAudio = audio;
       }
 
       function stopSound() {
