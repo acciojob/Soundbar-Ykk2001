@@ -11,12 +11,14 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        border: 1px solid red;
         background-color: #a066e8;
+        font-family: Arial, sans-serif;
       }
       #buttons {
         display: flex;
         gap: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
       }
       .btn {
         background-color: #5a2ea6;
@@ -31,63 +33,65 @@
       .btn:hover {
         background-color: #4b238a;
       }
-      stop {
+      .stop {
         background-color: #9b2c2c;
       }
-
       .stop:hover {
         background-color: #7e2121;
       }
     </style>
   </head>
   <body>
-  <div id="buttons">
-    <button class="btn">applause</button>
-    <button class="btn">boo</button>
-    <button class="btn">gasp</button>
-    <button class="btn">tada</button>
-    <button class="btn">victory</button>
-    <button class="btn">wrong</button>
-    <button class="stop">stop</button>
-  </div>
+    <div id="buttons">
+      <button class="btn">applause</button>
+      <button class="btn">boo</button>
+      <button class="btn">gasp</button>
+      <button class="btn">tada</button>
+      <button class="btn">victory</button>
+      <button class="btn">wrong</button>
+      <button class="stop">stop</button>
+    </div>
 
-  <!-- Hidden audio elements -->
-  <audio id="applause" src="https://actions.google.com/sounds/v1/crowds/applause.ogg"></audio>
-  <audio id="boo" src="https://actions.google.com/sounds/v1/human_voices/boo.ogg"></audio>
-  <audio id="gasp" src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg"></audio>
-  <audio id="tada" src="https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg"></audio>
-  <audio id="victory" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-  <audio id="wrong" src="https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg"></audio>
+    <!-- Hidden audio elements (using MP3 for broad support) -->
+    <audio id="applause" src="https://www.soundjay.com/human/applause-01.mp3"></audio>
+    <audio id="boo" src="https://www.soundjay.com/human/boo-01.mp3"></audio>
+    <audio id="gasp" src="https://www.soundjay.com/button/beep-07.mp3"></audio>
+    <audio id="tada" src="https://www.soundjay.com/misc/small-bell-ring-01.mp3"></audio>
+    <audio id="victory" src="https://www.soundjay.com/button/beep-01a.mp3"></audio>
+    <audio id="wrong" src="https://www.soundjay.com/button/beep-10.mp3"></audio>
 
-  <script>
-    let currentAudio = null;
+    <script>
+      window.currentAudio = null;
 
-    document.querySelectorAll(".btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const soundName = btn.textContent.trim();
-        playSound(soundName);
+      document.querySelectorAll(".btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const soundName = btn.textContent.trim();
+          playSound(soundName);
+        });
       });
-    });
 
-    document.querySelector(".stop").addEventListener("click", stopSound);
+      document.querySelector(".stop").addEventListener("click", stopSound);
 
-    function playSound(name) {
-      stopSound();
-      currentAudio = document.getElementById(name);
-      if (currentAudio) {
-        currentAudio.currentTime = 0;
-        currentAudio.play();
+      function playSound(name) {
+        stopSound();
+        const audio = document.getElementById(name);
+        if (audio) {
+          audio.currentTime = 0;
+          // Catch rejected play() promises so Cypress won't fail
+          audio.play().catch((err) => {
+            console.warn("Audio play failed:", err.message);
+          });
+          currentAudio = audio;
+        }
       }
-    }
 
-    function stopSound() {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-        currentAudio = null;
+      function stopSound() {
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          currentAudio = null;
+        }
       }
-    }
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
