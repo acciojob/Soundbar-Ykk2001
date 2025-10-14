@@ -1,16 +1,95 @@
 <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SoundBar</title>
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid red;
+        background-color: #a066e8;
+      }
+      #buttons {
+        display: flex;
+        gap: 20px;
+      }
+      .btn {
+        background-color: #5a2ea6;
+        color: white;
+        border: none;
+        padding: 15px 25px;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .btn:hover {
+        background-color: #4b238a;
+      }
+      stop {
+        background-color: #9b2c2c;
+      }
 
-<html>
+      .stop:hover {
+        background-color: #7e2121;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="buttons">
+      <button class="btn">applause</button>
+      <button class="btn">boo</button>
+      <button class="btn">gasp</button>
+      <button class="btn">tada</button>
+      <button class="btn">victory</button>
+      <button class="btn">wrong</button>
+      <button class="stop">stop</button>
+    </div>
 
-<head>
-	<link rel="stylesheet" href="styles.css">
-</head>
+    <script>
+      // Using free hosted sound URLs instead of local folder
+      const sounds = {
+        applause: "https://actions.google.com/sounds/v1/crowds/applause.ogg",
+        boo: "https://actions.google.com/sounds/v1/human_voices/boo.ogg",
+        gasp: "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg",
+        tada: "https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg",
+        victory: "https://actions.google.com/sounds/v1/alarms/beep_short.ogg",
+        wrong: "https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg",
+      };
 
-<body>
-	<!-- the entire body must be written by student -->
-    <script type="text/javascript" src="./script.js">
-</script>
+      let currentAudio = null;
 
-</body>
+      let Btns = document.querySelectorAll(".btn");
+      Btns.forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const soundName = btn.textContent.trim();
 
+          if (soundName == "stop") {
+            stopSound();
+          } else {
+            playSound(soundName);
+          }
+        });
+      }); //Btns
+
+      function playSound(name) {
+        stopSound();
+        currentAudio = new Audio(sounds[name]);
+        currentAudio.play();
+      }
+
+      function stopSound() {
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          currentAudio = null;
+        }
+      }
+    </script>
+  </body>
 </html>
