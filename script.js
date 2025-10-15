@@ -1,5 +1,4 @@
 //your JS code here. If required.
-//your JS code here. If required.
  const sounds = ["applause.mp3", "boo.mp3", "gasp.mp3", "tada.mp3", "victory.mp3", "wrong.mp3"];
 
   const buttonsContainer = document.getElementById("buttons");
@@ -22,7 +21,7 @@
 
 
 	const audio = document.createElement("audio");
-    audio.src = sounds/${sound};
+    audio.src = `sounds/${sound}`;
     audio.setAttribute("preload", "auto"); 
     audio.style.display = "none"; 
     document.body.appendChild(audio);
