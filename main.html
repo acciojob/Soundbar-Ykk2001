@@ -57,43 +57,53 @@
   </div>
 
   <script>
-    // Using free hosted sound URLs instead of local folder
-    const sounds = {
-      applause: 'https://actions.google.com/sounds/v1/crowds/applause.ogg',
-      boo: 'https://actions.google.com/sounds/v1/human_voices/boo.ogg',
-      gasp: 'https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg',
-      tada: 'https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg',
-      victory: 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg',
-      wrong: 'https://actions.google.com/sounds/v1/cartoon/cartoon_boing.ogg'
-    };
+   const sounds = ["applause.mp3", "boo.mp3", "gasp.mp3", "tada.mp3", "victory.mp3", "wrong.mp3"];
 
-    let currentAudio = null;
+  const buttonsContainer = document.getElementById("buttons");
 
-    document.querySelectorAll('.btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const soundName = btn.textContent.trim();
+  
+  let audioObjects = {};
 
-        if (soundName === 'stop') {
-          stopSound();
-        } else {
-          playSound(soundName);
-        }
-      });
+  // Function to stop all sounds
+  function stopAllSounds() {
+    for (let key in audioObjects) {
+      audioObjects[key].pause();
+      audioObjects[key].currentTime = 0;
+    }
+  }
+
+	  
+  sounds.forEach(sound => {
+    const btn = document.createElement("button");
+    btn.classList.add("btn");
+    btn.innerText = sound.replace(".mp3", "");
+
+    
+    const audio = document.createElement("audio");
+    audio.src = sounds/${sound};
+    audio.setAttribute("preload", "auto"); 
+    audio.style.display = "none"; 
+    document.body.appendChild(audio);
+
+    // Save audio object
+    audioObjects[sound] = audio;
+
+    // Button click event
+    btn.addEventListener("click", () => {
+      stopAllSounds();
+      audio.play();
     });
 
-    function playSound(name) {
-      stopSound(); // stop any current audio before playing new one
-      currentAudio = new Audio(sounds[name]);
-      currentAudio.play();
-    }
+    // Append button to container
+    buttonsContainer.appendChild(btn);
+  });
 
-    function stopSound() {
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-        currentAudio = null;
-      }
-    }
+  // Add Stop button
+  const stopBtn = document.createElement("button");
+  stopBtn.classList.add("stop");
+  stopBtn.innerText = "Stop";
+  stopBtn.addEventListener("click", stopAllSounds);
+  buttonsContainer.appendChild(stopBtn);
   </script>
 
 </body>
